@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -52,9 +52,10 @@ export function Transactions({ onAddTransaction }: TransactionsProps) {
     return unsubscribe
   }, [])
 
+  // Filter transactions whenever dependencies change
   useEffect(() => {
     filterTransactions()
-  }, [filterTransactions])
+  }, [transactions, searchTerm, typeFilter, categoryFilter, dateRange])
 
   const loadData = async (userId: string) => {
     setLoading(true)
@@ -79,7 +80,7 @@ export function Transactions({ onAddTransaction }: TransactionsProps) {
     }
   }
 
-  const filterTransactions = useCallback(() => {
+  const filterTransactions = () => {
     let filtered = [...transactions]
 
     // Search filter
@@ -111,7 +112,7 @@ export function Transactions({ onAddTransaction }: TransactionsProps) {
     }
 
     setFilteredTransactions(filtered)
-  }, [transactions, searchTerm, typeFilter, categoryFilter, dateRange])
+  }
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {

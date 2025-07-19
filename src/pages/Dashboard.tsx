@@ -31,24 +31,39 @@ export function Dashboard({ onAddTransaction }: DashboardProps) {
   const loadDashboardData = useCallback(async (userId: string) => {
     setLoading(true)
     try {
-      // Load all transactions
+      // Load all transactions with error handling
       const transactions = await blink.db.transactions.list({
         where: { userId },
         orderBy: { date: 'desc' }
       })
 
+      // Ensure transactions is an array
+      const validTransactions = Array.isArray(transactions) ? transactions : []
+
       // Calculate stats
-      const newStats = calculateStats(transactions)
+      const newStats = calculateStats(validTransactions)
       setStats(newStats)
 
       // Generate chart data
-      const newChartData = generateChartData(transactions, chartPeriod)
+      const newChartData = generateChartData(validTransactions, chartPeriod)
       setChartData(newChartData)
 
       // Set recent transactions (last 5)
-      setRecentTransactions(transactions.slice(0, 5))
+      setRecentTransactions(validTransactions.slice(0, 5))
     } catch (error) {
       console.error('Failed to load dashboard data:', error)
+      // Set empty state on error
+      setStats({
+        totalBalance: 0,
+        totalIncome: 0,
+        totalExpenses: 0,
+        monthlyIncome: 0,
+        monthlyExpenses: 0,
+        weeklyIncome: 0,
+        weeklyExpenses: 0,
+      })
+      setChartData([])
+      setRecentTransactions([])
     } finally {
       setLoading(false)
     }

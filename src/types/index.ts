@@ -6,7 +6,7 @@ export interface Transaction {
   categoryId?: string
   userId: string
   date: string
-  createdAt: string
+  createdAt?: string
 }
 
 export interface Category {

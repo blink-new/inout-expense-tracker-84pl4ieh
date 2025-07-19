@@ -14,6 +14,7 @@ function App() {
   const [showAddTransaction, setShowAddTransaction] = useState(false)
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
+  const [refreshKey, setRefreshKey] = useState(0)
 
   useEffect(() => {
     const unsubscribe = blink.auth.onAuthStateChanged((state) => {
@@ -28,8 +29,8 @@ function App() {
   }
 
   const handleTransactionAdded = () => {
-    // Refresh data by triggering a re-render
-    window.location.reload()
+    // Force a re-render by updating refresh key
+    setRefreshKey(prev => prev + 1)
   }
 
   if (loading) {
@@ -83,19 +84,19 @@ function App() {
         
         <main className="flex-1 md:ml-64 p-4 md:p-6 pb-20 md:pb-6">
           {activeTab === 'dashboard' && (
-            <Dashboard onAddTransaction={handleAddTransaction} />
+            <Dashboard key={`dashboard-${refreshKey}`} onAddTransaction={handleAddTransaction} />
           )}
           {activeTab === 'transactions' && (
-            <Transactions onAddTransaction={handleAddTransaction} />
+            <Transactions key={`transactions-${refreshKey}`} onAddTransaction={handleAddTransaction} />
           )}
           {activeTab === 'categories' && (
-            <Categories />
+            <Categories key={`categories-${refreshKey}`} />
           )}
           {activeTab === 'analytics' && (
-            <Analytics />
+            <Analytics key={`analytics-${refreshKey}`} />
           )}
           {activeTab === 'settings' && (
-            <Settings />
+            <Settings key={`settings-${refreshKey}`} />
           )}
         </main>
       </div>

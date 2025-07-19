@@ -79,6 +79,7 @@ export function AddTransactionDialog({
         categoryId: categoryId || undefined,
         userId: user.id,
         date: new Date(date).toISOString(),
+        createdAt: new Date().toISOString(),
       })
 
       // Reset form

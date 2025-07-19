@@ -5,14 +5,34 @@ export const blink = createClient({
   authRequired: true
 })
 
-// Suppress analytics errors in console
+// Disable analytics to prevent network errors
+// Analytics can be re-enabled later when network issues are resolved
+if (blink.analytics && typeof blink.analytics.disable === 'function') {
+  blink.analytics.disable()
+}
+
+// Comprehensive error suppression for analytics-related issues
 const originalConsoleError = console.error
+const originalConsoleWarn = console.warn
+
 console.error = (...args) => {
-  // Filter out analytics-related errors to reduce noise
   const message = args[0]?.toString() || ''
+  // Filter out all analytics and network-related errors
   if (message.includes('Failed to send analytics events') || 
-      message.includes('BlinkNetworkError')) {
-    return // Silently ignore analytics errors
+      message.includes('BlinkNetworkError') ||
+      message.includes('analytics') ||
+      message.includes('NetworkError when attempting to fetch resource')) {
+    return // Silently ignore these errors
   }
   originalConsoleError.apply(console, args)
+}
+
+console.warn = (...args) => {
+  const message = args[0]?.toString() || ''
+  // Filter out analytics warnings too
+  if (message.includes('analytics') || 
+      message.includes('BlinkNetworkError')) {
+    return // Silently ignore these warnings
+  }
+  originalConsoleWarn.apply(console, args)
 }

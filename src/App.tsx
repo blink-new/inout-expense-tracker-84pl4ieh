@@ -2,6 +2,10 @@ import { useState, useEffect } from 'react'
 import { Header } from '@/components/layout/Header'
 import { Navigation } from '@/components/layout/Navigation'
 import { Dashboard } from '@/pages/Dashboard'
+import { Transactions } from '@/pages/Transactions'
+import { Categories } from '@/pages/Categories'
+import { Analytics } from '@/pages/Analytics'
+import { Settings } from '@/pages/Settings'
 import { AddTransactionDialog } from '@/components/transactions/AddTransactionDialog'
 import { blink } from '@/blink/client'
 
@@ -82,28 +86,16 @@ function App() {
             <Dashboard onAddTransaction={handleAddTransaction} />
           )}
           {activeTab === 'transactions' && (
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-bold mb-4">Transactions</h2>
-              <p className="text-muted-foreground mb-6">Coming soon...</p>
-            </div>
+            <Transactions onAddTransaction={handleAddTransaction} />
           )}
           {activeTab === 'categories' && (
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-bold mb-4">Categories</h2>
-              <p className="text-muted-foreground mb-6">Coming soon...</p>
-            </div>
+            <Categories />
           )}
           {activeTab === 'analytics' && (
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-bold mb-4">Analytics</h2>
-              <p className="text-muted-foreground mb-6">Coming soon...</p>
-            </div>
+            <Analytics />
           )}
           {activeTab === 'settings' && (
-            <div className="text-center py-12">
-              <h2 className="text-2xl font-bold mb-4">Settings</h2>
-              <p className="text-muted-foreground mb-6">Coming soon...</p>
-            </div>
+            <Settings />
           )}
         </main>
       </div>

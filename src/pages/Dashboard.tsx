@@ -28,16 +28,6 @@ export function Dashboard({ onAddTransaction }: DashboardProps) {
   const [user, setUser] = useState<any>(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    const unsubscribe = blink.auth.onAuthStateChanged((state) => {
-      setUser(state.user)
-      if (state.user) {
-        loadDashboardData(state.user.id)
-      }
-    })
-    return unsubscribe
-  }, [loadDashboardData])
-
   const loadDashboardData = useCallback(async (userId: string) => {
     setLoading(true)
     try {
@@ -63,6 +53,23 @@ export function Dashboard({ onAddTransaction }: DashboardProps) {
       setLoading(false)
     }
   }, [chartPeriod])
+
+  useEffect(() => {
+    const unsubscribe = blink.auth.onAuthStateChanged((state) => {
+      setUser(state.user)
+      if (state.user) {
+        loadDashboardData(state.user.id)
+      }
+    })
+    return unsubscribe
+  }, [loadDashboardData])
+
+  // Reload data when chart period changes
+  useEffect(() => {
+    if (user) {
+      loadDashboardData(user.id)
+    }
+  }, [chartPeriod, user, loadDashboardData])
 
   const calculateStats = (transactions: Transaction[]): DashboardStats => {
     const now = new Date()
